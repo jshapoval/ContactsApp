@@ -13,7 +13,6 @@ namespace ContactsApp.Controllers
         public ActionResult Index()
         {
               return View();
-            //return View(db.Contacts.ToList());
         }
 
     }

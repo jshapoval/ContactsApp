@@ -103,13 +103,13 @@ namespace ContactsApp.Controllers
                 contact.FirstName = model.FirstName;
                 contact.LastName = model.LastName;
                 contact.Patronymic = model.Patronymic;
+                contact.DateOfBirth = model.DateOfBirth;
                 contact.Company = model.Company;
                 contact.Position = model.Position;
                 contact.ContactInformation = model.ContactInformation;
                 contact.Other = model.Other;
                 contact.Skype = model.Skype;
                 contact.Email = model.Email;
-                contact.DateOfBirth = model.DateOfBirth;
 
                 db.SaveChanges();
 
@@ -189,7 +189,7 @@ namespace ContactsApp.Controllers
         [HttpGet]
         public ActionResult Searching(ContactSearchFieldTypes field, string text)
         {
-            var contacts = new List<Contact>();
+            List<Contact> contacts;
 
             switch (field)
             {
@@ -203,11 +203,8 @@ namespace ContactsApp.Controllers
                     contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.Patronymic.Contains(text)).ToList();
                     break;
                 case ContactSearchFieldTypes.DateOfBirth:
-                   //обработчик неполного ввода даты
-                    var date = DateTime.Parse(text);
-                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => SqlFunctions.DatePart("year", x.DateOfBirth) == SqlFunctions.DatePart("year", date))
-                        .Where(v => SqlFunctions.DatePart("dayofyear", v.DateOfBirth) == SqlFunctions.DatePart("dayofyear", date)).ToList();
-               
+                   contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x =>
+                       x.DateOfBirth.HasValue && x.DateOfBirth.Value.Year.ToString().Contains(text)).ToList();
                     break;
                 case ContactSearchFieldTypes.Company:
                     contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.Company.Contains(text)).ToList();
@@ -219,17 +216,9 @@ namespace ContactsApp.Controllers
                     contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.ContactInformation.Contains(text)).ToList();
                     break;
                 case ContactSearchFieldTypes.PhoneNumbers:
-                    var pnList = db.ContactPhoneNumbers.Include(c => c.Contact).Where(x => x.PhoneNumber.Contains(text)).ToList();
-                    foreach (var pn in pnList)
-                    {
-                        if (!pn.IsDeleted)
-                        {
-                            var contact = db.Contacts.Include(c => c.PhoneNumbers).Where(i => i.Id == pn.ContactId).First();
-                            
-                            contacts.Add(contact);
-                        }
-                        
-                    }
+                    contacts = db.ContactPhoneNumbers.Include(c => c.Contact)
+                        .Where(x => x.PhoneNumber.Contains(text))
+                        .Select(x => x.Contact).ToList();
                     break;
                 case ContactSearchFieldTypes.Email:
                     contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.Email.Contains(text)).ToList();
@@ -245,12 +234,13 @@ namespace ContactsApp.Controllers
                     break;
             }
 
+            ViewBag.Searching = true;
+
             return View("Index", contacts);
         }
 
         public ActionResult Partial()
         {
-            ViewBag.Message = "Это частичное представление.";
             return PartialView();
         }
     }

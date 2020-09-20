@@ -18,7 +18,12 @@
     <p>
         @Html.ActionLink("Create New", "Create")
     </p>
-    
+
+@if (ViewBag.Searching == true)
+{
+    @Html.ActionLink("Go Home", "Index")
+}
+
 <div class="row">
 
     <form action="/contacts/searching" method="get">
