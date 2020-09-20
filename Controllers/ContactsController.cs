@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ContactsApp.DAL;
+using ContactsApp.Data;
 using ContactsApp.Models;
+using WebGrease.Css.Ast.Selectors;
 
 namespace ContactsApp.Controllers
 {
@@ -19,6 +23,7 @@ namespace ContactsApp.Controllers
         // GET: Contacts
         public ActionResult Index()
         {
+            
             return View(db.Contacts.ToList());
         }
 
@@ -55,9 +60,9 @@ namespace ContactsApp.Controllers
             {
                 db.Contacts.Add(contact);
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
-
             return View(contact);
         }
 
@@ -68,27 +73,49 @@ namespace ContactsApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Contact contact = db.Contacts.Find(id);
+            
+            var contact = db.Contacts.Find(id);
+
             if (contact == null)
             {
                 return HttpNotFound();
             }
+
+            contact.PhoneNumbers = contact.PhoneNumbers.Where(x => !x.IsDeleted).ToList();
+
             return View(contact);
         }
 
         // POST: Contacts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,LastName,FirstName,Patronymic,DateOfBirth,Company,Position,ContactInformation,PhoneNumbers,Email,Skype,Other")] Contact contact)
+        public async  Task <ActionResult> Edit(Contact model)
         {
+            var contact = await db.Contacts.FirstOrDefaultAsync(x => x.Id == model.Id);
+
+            if (contact is null)
+            {
+                return HttpNotFound("Contact not found");
+            }
+
             if (ModelState.IsValid)
             {
-                db.Entry(contact).State = EntityState.Modified;
+                contact.FirstName = model.FirstName;
+                contact.LastName = model.LastName;
+                contact.Patronymic = model.Patronymic;
+                contact.Company = model.Company;
+                contact.Position = model.Position;
+                contact.ContactInformation = model.ContactInformation;
+                contact.Other = model.Other;
+                contact.Skype = model.Skype;
+                contact.Email = model.Email;
+                contact.DateOfBirth = model.DateOfBirth;
+
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
+
             return View(contact);
         }
 
@@ -99,11 +126,14 @@ namespace ContactsApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Contact contact = db.Contacts.Find(id);
+           
+            var contact = db.Contacts.Find(id);
+
             if (contact == null)
             {
                 return HttpNotFound();
             }
+
             return View(contact);
         }
 
@@ -127,23 +157,101 @@ namespace ContactsApp.Controllers
             base.Dispose(disposing);
         }
 
-        //[HttpPost("contacts/DeleteNumber/{userId}")]
-        public ActionResult DeleteNumber(int userId, string oldNumber)
+        //[HttpPost("contacts/DeleteNumber/{userId}/{oldNumber}")]
+        [HttpPost, ActionName("DeleteNumber")]
+        public async Task<ActionResult> DeleteNumber(int id)
         {
+            var number = await db.ContactPhoneNumbers.FindAsync(id);
 
-            var number = db.ContactPhoneNumbers.Where(c => c.ContactId == userId).Where(n=>n.PhoneNumber==oldNumber);
-
-            number.FirstOrDefault().IsDeleted = true;
-            db.SaveChangesAsync();
-
-            Contact contact = db.Contacts.Find(userId);
-            if (contact == null)
+            if (number is null)
             {
                 return HttpNotFound();
             }
-            return View(contact);
 
+            number.IsDeleted = true;
+
+            await db.SaveChangesAsync();
+
+            return new HttpStatusCodeResult(200);
         }
 
+        [HttpPost, ActionName("CreateNumber")]
+        public async Task<ActionResult> CreateNumber(int id, string text)
+        {
+            var newNumber = new ContactPhoneNumber();
+            newNumber.PhoneNumber = text;
+            newNumber.ContactId = id;
+
+            await db.SaveChangesAsync();
+
+            return new HttpStatusCodeResult(200);
+        }
+        [HttpGet]
+        public ActionResult Searching(ContactSearchFieldTypes field, string text)
+        {
+            var contacts = new List<Contact>();
+
+            switch (field)
+            {
+                case ContactSearchFieldTypes.FirstName:
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.FirstName.Contains(text)).ToList();
+                    break;
+                case ContactSearchFieldTypes.LastName:
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.LastName.Contains(text)).ToList();
+                    break;
+                case ContactSearchFieldTypes.Patronymic:
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.Patronymic.Contains(text)).ToList();
+                    break;
+                case ContactSearchFieldTypes.DateOfBirth:
+                   //обработчик неполного ввода даты
+                    var date = DateTime.Parse(text);
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => SqlFunctions.DatePart("year", x.DateOfBirth) == SqlFunctions.DatePart("year", date))
+                        .Where(v => SqlFunctions.DatePart("dayofyear", v.DateOfBirth) == SqlFunctions.DatePart("dayofyear", date)).ToList();
+               
+                    break;
+                case ContactSearchFieldTypes.Company:
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.Company.Contains(text)).ToList();
+                    break;
+                case ContactSearchFieldTypes.Position:
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.Position.Contains(text)).ToList();
+                    break;
+                case ContactSearchFieldTypes.ContactInformation:
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.ContactInformation.Contains(text)).ToList();
+                    break;
+                case ContactSearchFieldTypes.PhoneNumbers:
+                    var pnList = db.ContactPhoneNumbers.Include(c => c.Contact).Where(x => x.PhoneNumber.Contains(text)).ToList();
+                    foreach (var pn in pnList)
+                    {
+                        if (!pn.IsDeleted)
+                        {
+                            var contact = db.Contacts.Include(c => c.PhoneNumbers).Where(i => i.Id == pn.ContactId).First();
+                            
+                            contacts.Add(contact);
+                        }
+                        
+                    }
+                    break;
+                case ContactSearchFieldTypes.Email:
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.Email.Contains(text)).ToList();
+                    break;
+              case ContactSearchFieldTypes.Skype:
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.Skype.Contains(text)).ToList();
+                    break;
+                case ContactSearchFieldTypes.Other:
+                    contacts = db.Contacts.Include(c => c.PhoneNumbers).Where(x => x.Other.Contains(text)).ToList();
+                    break;
+                default:
+                    contacts = new List<Contact>();
+                    break;
+            }
+
+            return View("Index", contacts);
+        }
+
+        public ActionResult Partial()
+        {
+            ViewBag.Message = "Это частичное представление.";
+            return PartialView();
+        }
     }
 }

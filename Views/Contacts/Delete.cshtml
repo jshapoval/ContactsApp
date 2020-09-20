@@ -82,7 +82,11 @@
                 <div>
                     @foreach (var phone in Model.PhoneNumbers)
                     {
-                        @Html.DisplayFor(modelItem => modelItem.PhoneNumbers)
+                        if (!phone.IsDeleted)
+                        {
+                            @Html.DisplayFor(modelItem => modelItem.PhoneNumbers)
+                        }
+                       
                     }
                 </div>
             </dd>

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ContactsApp.Models.Contact>
+﻿@using ContactsApp.Data
+@model IEnumerable<ContactsApp.Models.Contact>
 
 @{
     Layout = null;
@@ -17,8 +18,32 @@
     <p>
         @Html.ActionLink("Create New", "Create")
     </p>
+    
+<div class="row">
 
-    <table class="table table-striped table-dark">
+    <form action="/contacts/searching" method="get">
+
+        <div class="d-flex form-group" id="searchInfo">
+            
+            <select name="field" id="field">
+                @foreach (var option in EnumHelper.GetSelectList(typeof(ContactSearchFieldTypes)))
+                {
+                    <option value="@option.Value">@option.Text</option>
+                }
+            </select>
+
+            <input name="text" class="form-control" id="text" style="width: 25rem" />
+
+            <button type="submit" id="goSubmitButton" class="btn btn-primary">
+                Find
+                <i class="fas fa-search text-white" aria-hidden="true"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+
+<table class="table table-striped table-dark" id="myTable">
         <thead>
             <tr>
                 <th scope="col">@Html.DisplayNameFor(model => model.LastName)</th>
@@ -73,30 +98,37 @@
     </table>
 
 
-    <script>
-        function SearchFunction() {
-            var input, filter, ul, li, a, i, txtValue;
-            input = document.getElementById("searchRow");
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("informationTable");
-            li = ul.getElementsByTagName("tr");
-            for (i = 0; i < li.length; i++) {
-                a = li[i].getElementsByTagName("th")[0];
-                txtValue = a.textContent || a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    li[i].style.display = "";
-                } else {
-                    li[i].style.display = "none";
-                }
-            }
-        }
-    </script>
-
+   
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/Scripts/bootstrap.min.js"></script>
+<script src="/Scripts/bootstrap.min.js"></script>
 
+@*<script>
+    $("#contactForm").submit(function(event){
+        event.preventDefault();
+        submitForm();
+    });
+
+    function submitForm(){
+        var text = $("#textForSearch").val();
+ 
+        $.ajax({
+            type: "POST",
+            url: "/home/Searching/"+text
+            //data: "text=" + text + "&message=" + message,
+            success : function(text){
+                if (text == "success"){
+                    formSuccess();
+                }
+            }
+        });
+    }
+    function formSuccess(){
+        $( "#msgSubmit" ).removeClass( "hidden" );
+    }
+
+</script>*@
 
 </body>
 </html>

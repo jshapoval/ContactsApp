@@ -131,6 +131,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DAL\ContactInitializer.cs" />
     <Compile Include="DAL\ContactContext.cs" />
+    <Compile Include="Data\ContactSearchFieldTypes.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -180,10 +181,11 @@
     <Content Include="Views\Contacts\Edit.cshtml" />
     <Content Include="Views\Contacts\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ContactPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ContactPhoneNumber.cshtml" />
+    <Content Include="Views\Contacts\Partial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

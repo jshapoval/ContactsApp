@@ -26,9 +26,23 @@ namespace ContactsApp.Models
         public string Patronymic { get; set; }
 
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true,  NullDisplayText = "No information")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true,  NullDisplayText = "No information")]
         [Display(Name = "Date of birth")]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+
+        //public DateTime DateOfBirth
+        //{
+        //    get
+        //    {
+        //        return this.dateOfBirth.HasValue
+        //            ? this.dateOfBirth.Value
+        //            : DateTime.Now;
+        //    }
+
+        //    set { this.dateOfBirth = value; }
+        //}
+
+        //public DateTime? dateOfBirth = null;
 
         [DisplayFormat(NullDisplayText = "No information")]
         public string Company { get; set; }
@@ -40,7 +54,7 @@ namespace ContactsApp.Models
         [DisplayFormat(NullDisplayText = "No information")]
         public string ContactInformation { get; set; }
 
-        [Required]
+        //[Required]
         [Display(Name = "Phone numbers")]
        // public List<ContactPhoneNumber> PhoneNumbers { get; set; }
        public virtual ICollection<ContactPhoneNumber> PhoneNumbers { get; set; }
