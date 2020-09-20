@@ -2,7 +2,7 @@
 
 <div class="form-group">
     @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new {@class = "control-label col-md-2"})
-    <div class="col-md-10">
+    <div class="d-flex">
         @Html.HiddenFor(x => x.Id)
         @Html.HiddenFor(x => x.ContactId)
         @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
@@ -10,7 +10,7 @@
        
         
         <div class="form-actions no-color">
-            <button type="button" data-id="@Model.Id"class="delete-phone btn btn-default">Delete</button>
+            <button type="button" data-id="@Model.Id"class="delete-phone btn btn-primary" style="margin-left: 1rem">Delete</button>
         </div>
     </div>
 </div>

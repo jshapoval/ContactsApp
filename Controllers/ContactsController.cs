@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.SqlServer;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -66,14 +67,32 @@ namespace ContactsApp.Controllers
             return View(contact);
         }
 
-        // GET: Contacts/Edit/5
+        //public ActionResult Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+
+        //    var contact = db.Contacts.Find(id);
+
+        //    if (contact == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+
+        //    contact.PhoneNumbers = contact.PhoneNumbers.Where(x => !x.IsDeleted).ToList();
+
+        //    return View(contact);
+        //}
+
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             var contact = db.Contacts.Find(id);
 
             if (contact == null)
@@ -83,13 +102,59 @@ namespace ContactsApp.Controllers
 
             contact.PhoneNumbers = contact.PhoneNumbers.Where(x => !x.IsDeleted).ToList();
 
-            return View(contact);
+            var contactForEdit = new ContactEditModel()
+            {
+                Id = contact.Id,
+                FirstName = contact.FirstName,
+                LastName = contact.LastName,
+                Patronymic = contact.Patronymic,
+                DateOfBirth = contact.DateOfBirth?.ToString("dd.MM.yyyy"),
+                Company = contact.Company,
+                Position = contact.Position,
+                ContactInformation = contact.ContactInformation,
+                Email = contact.Email,
+                Other = contact.Other,
+                Skype = contact.Skype,
+                PhoneNumbers = contact.PhoneNumbers
+            };
+
+            return View(contactForEdit);
         }
 
-        // POST: Contacts/Edit/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async  Task <ActionResult> Edit(Contact model)
+        //public async  Task <ActionResult> Edit(Contact model)
+        //{
+        //    var contact = await db.Contacts.FirstOrDefaultAsync(x => x.Id == model.Id);
+
+        //    if (contact is null)
+        //    {
+        //        return HttpNotFound("Contact not found");
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        contact.FirstName = model.FirstName;
+        //        contact.LastName = model.LastName;
+        //        contact.Patronymic = model.Patronymic;
+        //        contact.DateOfBirth = model.DateOfBirth;
+        //        contact.Company = model.Company;
+        //        contact.Position = model.Position;
+        //        contact.ContactInformation = model.ContactInformation;
+        //        contact.Other = model.Other;
+        //        contact.Skype = model.Skype;
+        //        contact.Email = model.Email;
+
+        //        db.SaveChanges();
+
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    return View(contact);
+        //}
+
+        public async Task<ActionResult> Edit(ContactEditModel model)
         {
             var contact = await db.Contacts.FirstOrDefaultAsync(x => x.Id == model.Id);
 
@@ -103,7 +168,8 @@ namespace ContactsApp.Controllers
                 contact.FirstName = model.FirstName;
                 contact.LastName = model.LastName;
                 contact.Patronymic = model.Patronymic;
-                contact.DateOfBirth = model.DateOfBirth;
+                //contact.DateOfBirth = DateTime.ParseExact(model.DateOfBirth, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                contact.DateOfBirth = DateTime.Parse(model.DateOfBirth);
                 contact.Company = model.Company;
                 contact.Position = model.Position;
                 contact.ContactInformation = model.ContactInformation;
@@ -119,7 +185,6 @@ namespace ContactsApp.Controllers
             return View(contact);
         }
 
-        // GET: Contacts/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)

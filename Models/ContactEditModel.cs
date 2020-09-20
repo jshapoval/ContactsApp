@@ -6,7 +6,7 @@ using System.Web;
 
 namespace ContactsApp.Models
 {
-    public class Contact
+    public class ContactEditModel
     {
         public int Id { get; set; }
 
@@ -25,10 +25,12 @@ namespace ContactsApp.Models
         [DisplayFormat(NullDisplayText = "-")]
         public string Patronymic { get; set; }
 
-        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true,  NullDisplayText = "-")]
+        [RegularExpression(@"^\d{2}(.)\d{2}(.)\d{4}$", ErrorMessage = "Please, try write in format: dd.mm.yyyy")]
+        public string Phone { get; set; }
+
         [Display(Name = "Date of birth")]
-        public DateTime? DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
 
         [DisplayFormat(NullDisplayText = "-")]
         public string Company { get; set; }
@@ -40,9 +42,7 @@ namespace ContactsApp.Models
         [DisplayFormat(NullDisplayText = "-")]
         public string ContactInformation { get; set; }
 
-        //[Required]
         [Display(Name = "Phone numbers")]
-       // public List<ContactPhoneNumber> PhoneNumbers { get; set; }
        public virtual ICollection<ContactPhoneNumber> PhoneNumbers { get; set; }
 
        [DisplayFormat(NullDisplayText = "-")]

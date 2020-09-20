@@ -11,113 +11,115 @@
     <meta name="viewport" content="width=device-width" />
     <title>Details</title>
     <link rel="stylesheet" href="/Content/bootstrap.min.css">
+    @*<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">*@
 </head>
 <body>
-    <div>
-        <h4>Contact</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.LastName)
-            </dt>
+<div>
+    <h3 style="padding-left: 1rem";><b>Contact</b></h3>
+    <hr style="width:100%"/>
+   
+    <dl class="dl-horizontal"  style="padding-left: 1rem">
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.LastName)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.FirstName)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Patronymic)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Patronymic)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Patronymic)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.Patronymic)
+        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.DateOfBirth)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Company)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Company)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Company)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.Company)
+        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Position)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Position)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Position)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.Position)
+        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.ContactInformation)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactInformation)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.ContactInformation)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.ContactInformation)
+        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.PhoneNumbers)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumbers)
+        </dt>
 
-            <dd>
-                <div>
-                    @foreach (var phone in Model.PhoneNumbers)
+        <dd>
+            <div>
+                @foreach (var phone in Model.PhoneNumbers)
+                {
+                    if (!phone.IsDeleted)
                     {
-                        if (!phone.IsDeleted)
-                        {
-                            @Html.DisplayFor(modelItem => phone)
-                        }
-
+                        @Html.DisplayFor(modelItem => phone)
                     }
-                </div>
-            </dd>
+
+                }
+            </div>
+        </dd>
 
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Email)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Email)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Skype)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Skype)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Skype)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.Skype)
+        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Other)
-            </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Other)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Other)
-            </dd>
+        <dd>
+            @Html.DisplayFor(model => model.Other)
+        </dd>
 
-        </dl>
-    </div>
-    <p>
+    </dl>
+</div>
+    <p  style="padding-left: 1rem">
         @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
         @Html.ActionLink("Back to List", "Index")
     </p>
