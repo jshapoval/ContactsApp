@@ -27,6 +27,7 @@ namespace ContactsApp.Models
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true,  NullDisplayText = "-")]
+        [RegularExpression(@"(((0|1)[0-9]|2[0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)\d\d))$", ErrorMessage = "Please, try write in format: dd.mm.yyyy")]
         [Display(Name = "Date of birth")]
         public DateTime? DateOfBirth { get; set; }
 

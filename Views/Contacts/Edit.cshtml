@@ -53,21 +53,14 @@
             </div>
         </div>
 
-        @*<div class="form-group">
+
+        <div class="form-group">
             @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
             <div>
-                @Html.EditorFor(model => model.DateOfBirth.Value, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-                @Html.ValidationMessageFor(model => model.DateOfBirth.Value, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
             </div>
-        </div>*@
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div>
-            @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
         </div>
-    </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Company, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -95,6 +88,7 @@
 
         @Html.EditorFor(x => x.PhoneNumbers)
 
+        @{Html.RenderPartial("Partial");}
         @*@{Html.RenderPartial("Partial");}*@
 
         <div class="form-group">

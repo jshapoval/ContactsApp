@@ -24,7 +24,7 @@ namespace ContactsApp.Controllers
         // GET: Contacts
         public ActionResult Index()
         {
-            
+          
             return View(db.Contacts.ToList());
         }
 
@@ -117,7 +117,6 @@ namespace ContactsApp.Controllers
                 Skype = contact.Skype,
                 PhoneNumbers = contact.PhoneNumbers
             };
-
             return View(contactForEdit);
         }
 
@@ -254,6 +253,7 @@ namespace ContactsApp.Controllers
         [HttpGet]
         public ActionResult Searching(ContactSearchFieldTypes field, string text)
         {
+
             List<Contact> contacts;
 
             switch (field)
@@ -303,9 +303,9 @@ namespace ContactsApp.Controllers
 
             return View("Index", contacts);
         }
-
         public ActionResult Partial()
         {
+            ViewBag.Message = "Это частичное представление.";
             return PartialView();
         }
     }

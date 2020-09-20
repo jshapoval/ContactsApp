@@ -26,9 +26,7 @@ namespace ContactsApp.Models
         public string Patronymic { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true,  NullDisplayText = "-")]
-        [RegularExpression(@"^\d{2}(.)\d{2}(.)\d{4}$", ErrorMessage = "Please, try write in format: dd.mm.yyyy")]
-        public string Phone { get; set; }
-
+        [RegularExpression(@"(((0|1)[0-9]|2[0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)\d\d))$", ErrorMessage = "Please, try write in format: dd.mm.yyyy")]
         [Display(Name = "Date of birth")]
         public string DateOfBirth { get; set; }
 
