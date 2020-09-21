@@ -1,7 +1,7 @@
 ﻿@model ContactsApp.Models.ContactPhoneNumber
 
 <div class="form-group">
-    @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new {@class = "control-label col-md-2"})
+    @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new {@class = "control-label"})
     <div class="d-flex">
         @Html.HiddenFor(x => x.Id)
         @Html.HiddenFor(x => x.ContactId)

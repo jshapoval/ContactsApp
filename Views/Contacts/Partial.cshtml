@@ -4,7 +4,7 @@
 <label for="newNumber">Phone number</label>
 
 @Html.HiddenFor(x => x.Id)
-<input class="form-control" type="text" placeholder="Default input" id="newNumber">
-<div class="form-actions no-color">
-    <button type="button" data-user-id="@Model.Id" value="Save number" class="create-phone btn btn-primary">Save number</button>
+<div class="d-flex form-actions no-color" style="margin-bottom: 1rem">
+    <input class="form-control" type="text"  id="newNumber" style="width: 22.5rem;">
+    <button type="button" data-user-id="@Model.Id" value="Save number" class="create-phone ml-1 btn btn-primary">Add</button>
 </div>

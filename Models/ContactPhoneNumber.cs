@@ -15,6 +15,7 @@ namespace ContactsApp.Models
         [Display(Name = "Phone number")]
         [StringLength(11, ErrorMessage = "Phone number cannot be longer than 11 characters.")]
         [DisplayFormat(DataFormatString = "{0:# ###-###-####}")]
+        [RegularExpression(@"\d+", ErrorMessage = "Please, without lettars and symbols")]
         public string PhoneNumber { get; set; }
 
         //[Key]

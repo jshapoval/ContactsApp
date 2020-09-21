@@ -15,13 +15,16 @@
     @*<link rel="stylesheet" href="/Content/bootstrap.min.css">*@
 </head>
 <body>
-    <p>
+    <p style="margin-left: 0.5rem; margin-top:0.5rem">
         @Html.ActionLink("Create New", "Create")
     </p>
 
 @if (ViewBag.Searching == true)
 {
-    @Html.ActionLink("Go Home", "Index")
+    <div style="margin-left: 0.5rem; margin-bottom:0.5rem">
+        @Html.ActionLink("Go Home", "Index")
+    </div>
+   
 }
 
 <div>
@@ -104,37 +107,11 @@
     </table>
 
 
-   
-
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="/Scripts/bootstrap.min.js"></script>
 
-@*<script>
-    $("#contactForm").submit(function(event){
-        event.preventDefault();
-        submitForm();
-    });
 
-    function submitForm(){
-        var text = $("#textForSearch").val();
- 
-        $.ajax({
-            type: "POST",
-            url: "/home/Searching/"+text
-            //data: "text=" + text + "&message=" + message,
-            success : function(text){
-                if (text == "success"){
-                    formSuccess();
-                }
-            }
-        });
-    }
-    function formSuccess(){
-        $( "#msgSubmit" ).removeClass( "hidden" );
-    }
-
-</script>*@
 
 </body>
 </html>
