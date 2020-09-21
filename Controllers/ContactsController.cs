@@ -21,14 +21,12 @@ namespace ContactsApp.Controllers
     {
         private ContactContext db = new ContactContext();
 
-        // GET: Contacts
         public ActionResult Index()
         {
           
             return View(db.Contacts.ToList());
         }
 
-        // GET: Contacts/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -43,16 +41,13 @@ namespace ContactsApp.Controllers
             return View(contact);
         }
 
-        // GET: Contacts/
 
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Contacts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,LastName,FirstName,Patronymic,DateOfBirth,Company,Position,ContactInformation,PhoneNumbers,Email,Skype,Other")] Contact contact)
@@ -67,25 +62,7 @@ namespace ContactsApp.Controllers
             return View(contact);
         }
 
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-
-        //    var contact = db.Contacts.Find(id);
-
-        //    if (contact == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-
-        //    contact.PhoneNumbers = contact.PhoneNumbers.Where(x => !x.IsDeleted).ToList();
-
-        //    return View(contact);
-        //}
-
+       
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -123,36 +100,6 @@ namespace ContactsApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async  Task <ActionResult> Edit(Contact model)
-        //{
-        //    var contact = await db.Contacts.FirstOrDefaultAsync(x => x.Id == model.Id);
-
-        //    if (contact is null)
-        //    {
-        //        return HttpNotFound("Contact not found");
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        contact.FirstName = model.FirstName;
-        //        contact.LastName = model.LastName;
-        //        contact.Patronymic = model.Patronymic;
-        //        contact.DateOfBirth = model.DateOfBirth;
-        //        contact.Company = model.Company;
-        //        contact.Position = model.Position;
-        //        contact.ContactInformation = model.ContactInformation;
-        //        contact.Other = model.Other;
-        //        contact.Skype = model.Skype;
-        //        contact.Email = model.Email;
-
-        //        db.SaveChanges();
-
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    return View(contact);
-        //}
-
         public async Task<ActionResult> Edit(ContactEditModel model)
         {
             var contact = await db.Contacts.FirstOrDefaultAsync(x => x.Id == model.Id);
@@ -201,7 +148,7 @@ namespace ContactsApp.Controllers
             return View(contact);
         }
 
-        // POST: Contacts/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -221,7 +168,6 @@ namespace ContactsApp.Controllers
             base.Dispose(disposing);
         }
 
-        //[HttpPost("contacts/DeleteNumber/{userId}/{oldNumber}")]
         [HttpPost, ActionName("DeleteNumber")]
         public async Task<ActionResult> DeleteNumber(int id)
         {
@@ -239,17 +185,18 @@ namespace ContactsApp.Controllers
             return new HttpStatusCodeResult(200);
         }
 
-        [HttpPost, ActionName("CreateNumber")]
-        public async Task<ActionResult> CreateNumber(int id, string text)
+        [HttpPost]
+        public async Task<ActionResult> CreateNumber(string numberValue, int contactId)
         {
             var newNumber = new ContactPhoneNumber();
-            newNumber.PhoneNumber = text;
-            newNumber.ContactId = id;
-
+            newNumber.PhoneNumber = numberValue;
+            newNumber.ContactId = contactId;
+            db.ContactPhoneNumbers.Add(newNumber);
             await db.SaveChangesAsync();
 
             return new HttpStatusCodeResult(200);
         }
+
         [HttpGet]
         public ActionResult Searching(ContactSearchFieldTypes field, string text)
         {
@@ -305,7 +252,6 @@ namespace ContactsApp.Controllers
         }
         public ActionResult Partial()
         {
-            ViewBag.Message = "Это частичное представление.";
             return PartialView();
         }
     }

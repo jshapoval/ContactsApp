@@ -89,7 +89,6 @@
         @Html.EditorFor(x => x.PhoneNumbers)
 
         @{Html.RenderPartial("Partial");}
-        @*@{Html.RenderPartial("Partial");}*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -154,22 +153,24 @@
 <script>
     $('.create-phone').off().on('click',
         function () {
-            let text = parseInt($(this).attr('data-id'));
-            let contactId
-            $.post("/contacts/createNumber/" + contactId +"/"+text,
+            let contactId = parseInt($(this).attr('data-user-id'));
+            let numberValue = document.getElementById('newNumber').value;
+            $.post("/contacts/createNumber?numberValue=" +numberValue+"&contactId="+contactId,
                     function(data) {
 
                     })
-                .done(function () {
-                    alert("Deleted !");
+                    .done(function () {
+                        alert("Saved !");
 
-                    window.location.reload();(
-                })
-                .fail(function() {
+                        window.location.reload();
+                    })
+                    .fail(function() {
                     alert("Error");
-                });
+                    });
         });
 </script>
+    
+
 
 </body>
 </html>
